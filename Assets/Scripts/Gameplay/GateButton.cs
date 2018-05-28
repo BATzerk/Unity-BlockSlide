@@ -11,6 +11,7 @@ public class GateButton : MonoBehaviour {
 	private Gate myGate;
 	// Properties
 	private bool isPressed;
+	private int sideToPressMe;
 	private Color bodyColor = Color.red;
 
 	// Getters
@@ -34,6 +35,11 @@ public class GateButton : MonoBehaviour {
 	}
 
 
+	private void Start() {
+		sideToPressMe = GetSideToPressMe();
+	}
+
+
 
 	// ----------------------------------------------------------------
 	//  Doers
@@ -42,10 +48,6 @@ public class GateButton : MonoBehaviour {
 		this.myGate = gate;
 		bodyColor = myGate.BodyColor;
 		sr_body.color = bodyColor;
-
-		// test
-//		int side = GetSideToPressMe();
-//		Debug.Log("GetSideToPressMe: " + side);
 	}
 	private void GetPressed() {
 		isPressed = true;
@@ -68,12 +70,9 @@ public class GateButton : MonoBehaviour {
 	}
 	private void OnPlayerTouchMe(Player player) {
 		if (player==null) { Debug.LogError("Uh-oh! Calling OnPlayerTouchMe with a null Player. Hmm."); return; }
-		int playerSideMoving = MathUtils.GetSide(player.DashDir.ToVector2Int());
+		int playerMoveSide = player.MoveSide;
 
-
-		int sideToPressMe = GetSideToPressMe();
-
-		if (playerSideMoving == sideToPressMe) {
+		if (playerMoveSide == sideToPressMe) {
 			GetPressed();
 		}
 	}
