@@ -12,7 +12,7 @@ public class GateButton : BoardObject {
 	// Properties
 	[SerializeField] private int channelID;
 	private bool isPressed;
-	private int sideToPressMe;
+//	private int sideToPressMe;
 
 	// Getters
 	public bool IsPressed { get { return isPressed; } }
@@ -20,6 +20,7 @@ public class GateButton : BoardObject {
 
 	private Color bodyColor { get { return myChannel.Color; } }
 	private GateChannel myChannel { get { return myLevel.gateChannels[channelID]; } }
+	private int sideToPressMe() { return GetSideToPressMe(); } // Hacky messy. :P
 	/** Kind of a weird function. We ONLY use my rotation to estimate what side button we are, based on the grid. */
 	private int GetSideToPressMe() {
 //		Vector2 pos = transform.localPosition;
@@ -43,7 +44,7 @@ public class GateButton : BoardObject {
 	//  Serialize
 	// ----------------------------------------------------------------
 	public GateButtonData SerializeAsData() {
-		GateButtonData data = new GateButtonData (pos, sideToPressMe, channelID, isPressed);
+		GateButtonData data = new GateButtonData (pos, sideToPressMe(), channelID, isPressed);
 		return data;
 	}
 
@@ -60,11 +61,11 @@ public class GateButton : BoardObject {
 		float scale = UnitSize * 1; // hacked in!
 		this.transform.localScale = new Vector3(scale,scale,1);
 	}
-	private void Start() {
-		sideToPressMe = GetSideToPressMe(); // Set this right away in case we wanna serialize me.
-
-//		sr_body
-	}
+//	private void Start() {
+//		sideToPressMe = GetSideToPressMe(); // Set this right away in case we wanna serialize me.
+//
+////		sr_body
+//	}
 
 
 
@@ -105,7 +106,7 @@ public class GateButton : BoardObject {
 		if (player==null) { Debug.LogError("Uh-oh! Calling OnPlayerTouchMe with a null Player. Hmm."); return; }
 		int playerMoveSide = player.MoveSide;
 
-		if (playerMoveSide == sideToPressMe) {
+		if (playerMoveSide == sideToPressMe()) {
 			GetPressed();
 		}
 	}

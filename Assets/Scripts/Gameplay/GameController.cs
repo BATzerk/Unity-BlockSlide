@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour {
 	// References
 	[SerializeField] private GameCameraController cameraController;
 	[SerializeField] private Level level;
+	[SerializeField] private UndoController undoController;
 
 	// Getters / Setters
 	public Level Level { get { return level; } }
@@ -19,7 +20,7 @@ public class GameController : MonoBehaviour {
 
 
 	// ----------------------------------------------------------------
-	//  Start / Destroy
+	//  Start
 	// ----------------------------------------------------------------
 	private void Start () {
 		// Start us off in this version by telling the Level to look at itself, and set its references from what's in it.
@@ -44,6 +45,10 @@ public class GameController : MonoBehaviour {
 
 	private void Debug_SerializeAndReloadLevel() {
 		LevelData levelData = level.SerializeAsData();
+		InitializeLevelFromData(levelData);
+		undoController.Reset();
+	}
+	public void InitializeLevelFromData(LevelData levelData) {
 		level.InitializeFromData(levelData);
 		cameraController.Reset();
 	}
@@ -61,6 +66,7 @@ public class GameController : MonoBehaviour {
 		else if (debug_isSlowMo) { Time.timeScale = 0.2f; }
 		else { Time.timeScale = 1; }
 	}
+
 
 
 	// ----------------------------------------------------------------
@@ -84,6 +90,12 @@ public class GameController : MonoBehaviour {
 
 		if (Input.GetKeyDown(KeyCode.Escape)) {
 			TogglePause();
+		}
+		else if (Input.GetKeyDown(KeyCode.Z)) {
+			undoController.Undo();
+		}
+		else if (Input.GetKeyDown(KeyCode.X)) {
+			undoController.Redo();
 		}
 
 		// ~~~~ DEBUG ~~~~

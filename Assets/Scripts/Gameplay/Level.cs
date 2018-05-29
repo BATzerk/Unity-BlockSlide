@@ -5,7 +5,6 @@ using UnityEngine;
 public class Level : MonoBehaviour {
 	// Properties
 	public GateChannel[] gateChannels;
-	private List<LevelData> snapshots;
 	// Components
 	public  Player player;
 	private List<Gem> gems;
@@ -74,7 +73,9 @@ public class Level : MonoBehaviour {
 			else if (bo is Gem) { gems.Add(bo as Gem); }
 			else if (bo is Gate) { gates.Add(bo as Gate); }
 			else if (bo is GateButton) { gateButtons.Add(bo as GateButton); }
-			else if (bo is ToggleGround) { toggleGrounds.Add(bo as ToggleGround); }
+			else if (bo is ToggleGround) {
+				toggleGrounds.Add(bo as ToggleGround);
+			}
 			else if (bo is Ground) { grounds.Add(bo as Ground); }
 		}
 	}
@@ -94,6 +95,11 @@ public class Level : MonoBehaviour {
 			prop.Initialize(this, data as GemData);
 			gems.Add(prop);
 		}
+		else if (data is ToggleGroundData) {
+			ToggleGround prop = Instantiate(resourcesHandler.toggleGround).GetComponent<ToggleGround>();
+			prop.Initialize(this, data as ToggleGroundData);
+			toggleGrounds.Add(prop);
+		}
 		else if (data is GroundData) {
 			Ground prop = Instantiate(resourcesHandler.ground).GetComponent<Ground>();
 			prop.Initialize(this, data as GroundData);
@@ -103,11 +109,6 @@ public class Level : MonoBehaviour {
 			Player prop = Instantiate(resourcesHandler.player).GetComponent<Player>();
 			prop.Initialize(this, data as PlayerData);
 			player = prop;
-		}
-		else if (data is ToggleGroundData) {
-			ToggleGround prop = Instantiate(resourcesHandler.toggleGround).GetComponent<ToggleGround>();
-			prop.Initialize(this, data as ToggleGroundData);
-			toggleGrounds.Add(prop);
 		}
 		else {
 			Debug.LogError("Unrecognized PropData type: " + data);
@@ -129,22 +130,7 @@ public class Level : MonoBehaviour {
 		}
 		// Reset channels (this'll update their references)!
 		for (int i=0; i<gateChannels.Length; i++) { gateChannels[i].Reset(); }
-
-		// Take our first snapshot!
-		snapshots = new List<LevelData>();
-		AddSnapshot();
 	}
-
-
-
-	// ----------------------------------------------------------------
-	//  Doers
-	// ----------------------------------------------------------------
-	private void AddSnapshot() {
-		LevelData snapshot = SerializeAsData();
-		snapshots.Add(snapshot);
-	}
-
 
 
 
