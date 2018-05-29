@@ -13,15 +13,15 @@ public class EventManager {
 	public delegate void PlayerAction (Player player);
 
 	public event NoParamAction ScreenSizeChangedEvent;
-	public event PlayerAction PlayerDashEvent;
-	public event PlayerAction PlayerDashEndEvent;
+	public event PlayerAction PlayerMoveStartEvent;
+	public event PlayerAction PlayerMoveEndEvent;
 	public event PlayerAction PlayerJumpEvent;
 
 	// Program Events
 	public void OnScreenSizeChanged () { if (ScreenSizeChangedEvent!=null) { ScreenSizeChangedEvent (); } }
 	// Game Events
-	public void OnPlayerDash(Player player) { if (PlayerDashEvent!=null) { PlayerDashEvent(player); } }
-	public void OnPlayerDashEnd(Player player) { if (PlayerDashEndEvent!=null) { PlayerDashEndEvent(player); } }
+	public void OnPlayerDash(Player player) { if (PlayerMoveStartEvent!=null) { PlayerMoveStartEvent(player); } }
+	public void OnPlayerDashEnd(Player player) { if (PlayerMoveEndEvent!=null) { PlayerMoveEndEvent(player); } }
 	public void OnPlayerJump(Player player) { if (PlayerJumpEvent!=null) { PlayerJumpEvent(player); } }
 
 }

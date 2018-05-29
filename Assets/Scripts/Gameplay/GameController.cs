@@ -8,6 +8,8 @@ public class GameController : MonoBehaviour {
 	private bool debug_isSlowMo = false;
 	// Components
 	[SerializeField] private GameObject go_structure; // the physical level layout
+	// References
+	[SerializeField] private Level level;
 
 	// Getters / Setters
 	private InputController inputController { get { return InputController.Instance; } }
@@ -19,12 +21,11 @@ public class GameController : MonoBehaviour {
 	// ----------------------------------------------------------------
 	private void Start () {
 //		ResetLevel ();
+	}
 
-		// Add event listeners!
-	}
-	private void OnDestroy() {
-		// Add event listeners!
-	}
+//	private void ResetLevel() {
+//		level.Reset();
+//	}
 
 
 	// ----------------------------------------------------------------

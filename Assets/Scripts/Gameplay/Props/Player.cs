@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class Player : BoardObject {
 	// Movement
 	private const float MoveSpeed = 100f; // how fast we move.
 	// Properties
@@ -40,6 +40,15 @@ public class Player : MonoBehaviour {
 	public int MoveSide { get { return moveSide; } }
 	public Vector2 Pos { get { return pos; } }
 	public Vector2 Size { get { return size; } }
+
+
+	// ----------------------------------------------------------------
+	//  Serialize
+	// ----------------------------------------------------------------
+	public PlayerData SerializeAsData() {
+		PlayerData data = new PlayerData (GetBoardPos());
+		return data;
+	}
 
 
 
