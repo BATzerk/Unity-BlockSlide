@@ -25,6 +25,7 @@ public class GameController : MonoBehaviour {
 	private void Start () {
 		// Start us off in this version by telling the Level to look at itself, and set its references from what's in it.
 		level.FindAllMyPropReferences();
+		Debug_SerializeAndReloadLevel();
 	}
 
 

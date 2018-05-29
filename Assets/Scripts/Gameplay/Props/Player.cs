@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : BoardObject {
 	// Movement
-	private const float MoveSpeed = 100f; // how fast we move.
+	private const float MoveSpeed = 1f; // how fast we move.
 	// Properties
 	private bool isMoving;
 	private int numMovesSinceGround;
@@ -20,10 +20,10 @@ public class Player : BoardObject {
 	[SerializeField] private PlayerBody body=null;
 
 	// Getters/Setters
-	private Vector2 vel {
-		get { return myRigidbody.velocity; }
-		set { myRigidbody.velocity = value; }
-	}
+	private Vector2 vel;// {
+//		get { return myRigidbody.velocity; }
+//		set { myRigidbody.velocity = value; }
+//	}
 	private bool CanMoveInDir(int side) { return CanMoveInDir(MathUtils.GetDir(side)); }
 	private bool CanMoveInDir(Vector2Int dir) {
 		if (isMoving) { return false; } // Can't move while moving.
@@ -75,6 +75,23 @@ public class Player : BoardObject {
 	// ----------------------------------------------------------------
 	//  Update
 	// ----------------------------------------------------------------
+	private void FixedUpdate () {
+		if (Time.timeScale == 0) { return; } // No time? No dice.
+
+		UpdateMoving();
+	}
+	private void UpdateMoving() {
+		if (isMoving) {
+			float distToGround = myWhiskers.DistToGroundAtSide(moveSide);
+			Vector2 appliedVel = vel;
+			if (appliedVel.magnitude > distToGround) {
+				appliedVel = appliedVel.normalized * distToGround;
+			}
+			pos += new Vector3(appliedVel.x, appliedVel.y, 0);
+		}
+	}
+
+
 	private void Update () {
 		if (Time.timeScale == 0) { return; } // No time? No dice.
 
@@ -88,11 +105,6 @@ public class Player : BoardObject {
 		if (Input.GetKeyDown(KeyCode.UpArrow))    { TryToMove(Sides.T); }
 	}
 
-	private void FixedUpdate () {
-		if (Time.timeScale == 0) { return; } // No time? No dice.
-
-
-	}
 
 
 	// ----------------------------------------------------------------
@@ -100,7 +112,8 @@ public class Player : BoardObject {
 	// ----------------------------------------------------------------
 	protected void SnapPosToGrid() {
 		float pu = GameProperties.UnitSize;//*0.5f;
-		pos = new Vector3(Mathf.Round(pos.x/pu)*pu, Mathf.Round(pos.y/pu)*pu, pos.z);
+		float pu2 = pu * 0.5f;
+		pos = new Vector3(Mathf.Round((pos.x-pu2)/pu)*pu + pu2, Mathf.Round((pos.y-pu2)/pu)*pu + pu2, pos.z);
 	}
 
 	private void TryToMove(int side) {

@@ -28,7 +28,7 @@ public class GameBackground : MonoBehaviour {
 				GameUtils.SizeSpriteRenderer (newSprite, unitSize,unitSize);
 				newSprite.color = new Color(0,0,0, Random.Range(0, 0.4f));
 //				newSprite.sortingOrder = 1;
-				newSprite.transform.localPosition = new Vector3((col+0.5f)*unitSize, (row)*unitSize) - new Vector3(gridSize.x,gridSize.y)*0.5f;//NOTE: idk why not row+0.5f, too. :P
+				newSprite.transform.localPosition = new Vector3((col+0.5f)*unitSize, (row+0.5f)*unitSize) - new Vector3(gridSize.x,gridSize.y)*0.5f;
 				tileSprites[col,row] = newSprite;
 			}
 		}
