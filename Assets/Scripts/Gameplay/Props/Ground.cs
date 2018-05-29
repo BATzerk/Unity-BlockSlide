@@ -5,14 +5,15 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(SpriteRenderer))]
 public class Ground : BoardObject {
+//	// Components
+//	[SerializeField] private BoxCollider2D myCollider;
+//	[SerializeField] private SpriteRenderer bodySprite;
 
 
 	// Getters / Setters
-	private Vector2 GetSize() {
-		return this.transform.localScale; //GetComponent<BoxCollider2D>().size;
-	}
-	private void SetSize(Vector2 size) {
-		this.transform.localScale = new Vector3(size.x, size.y, 1);
+	protected Vector2 Size {
+		get { return this.transform.localScale; } //myCollider.size;
+		set { this.transform.localScale = new Vector3(value.x, value.y, 1); }
 	}
 
 
@@ -21,18 +22,16 @@ public class Ground : BoardObject {
 	//  Serialize
 	// ----------------------------------------------------------------
 	public GroundData SerializeAsData() {
-		GroundData data = new GroundData (pos, GetSize());
+		GroundData data = new GroundData (pos, Size);
 		return data;
 	}
-
 
 	// ----------------------------------------------------------------
 	//  Initialize
 	// ----------------------------------------------------------------
 	public void Initialize(Level myLevel, GroundData data) {
 		BaseInitialize(myLevel, data);
-
-		SetSize (data.size);
+		Size = data.size;
 	}
 
 }

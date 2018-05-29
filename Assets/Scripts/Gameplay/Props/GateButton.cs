@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class GateButton : MonoBehaviour {
+public class GateButton : BoardObject {
 	// Components
 	[SerializeField] private BoxCollider2D myCollider;
 	[SerializeField] private SpriteRenderer sr_body;
 	// References
 	private Gate myGate;
 	// Properties
+	[SerializeField] private int channelID;
 	private bool isPressed;
 	private int sideToPressMe;
-	private Color bodyColor = Color.red;
 
 	// Getters
 	public bool IsPressed { get { return isPressed; } }
+	public int ChannelID { get { return channelID; } }
+
+	private Color bodyColor { get { return myChannel.Color; } }
+	private GateChannel myChannel { get { return myLevel.gateChannels[channelID]; } }
 	/** Kind of a weird function. We ONLY use my rotation to estimate what side button we are, based on the grid. */
 	private int GetSideToPressMe() {
 //		Vector2 pos = transform.localPosition;
@@ -35,8 +39,31 @@ public class GateButton : MonoBehaviour {
 	}
 
 
+	// ----------------------------------------------------------------
+	//  Serialize
+	// ----------------------------------------------------------------
+	public GateButtonData SerializeAsData() {
+		GateButtonData data = new GateButtonData (pos, sideToPressMe, channelID, isPressed);
+		return data;
+	}
+
+	// ----------------------------------------------------------------
+	//  Initialize
+	// ----------------------------------------------------------------
+	public void Initialize(Level myLevel, GateButtonData data) {
+		BaseInitialize(myLevel, data);
+		this.channelID = data.channelID;
+		SetIsPressed(data.isPressed);
+
+		rotation = data.sideToPressMe * 90;
+
+		float scale = UnitSize * 1; // hacked in!
+		this.transform.localScale = new Vector3(scale,scale,1);
+	}
 	private void Start() {
-		sideToPressMe = GetSideToPressMe();
+		sideToPressMe = GetSideToPressMe(); // Set this right away in case we wanna serialize me.
+
+//		sr_body
 	}
 
 
@@ -44,16 +71,18 @@ public class GateButton : MonoBehaviour {
 	// ----------------------------------------------------------------
 	//  Doers
 	// ----------------------------------------------------------------
-	public void SetMyGate(Gate gate) {
-		this.myGate = gate;
-		bodyColor = myGate.BodyColor;
-		sr_body.color = bodyColor;
-	}
-	private void GetPressed() {
-		isPressed = true;
-		sr_body.color = new Color(bodyColor.r,bodyColor.g,bodyColor.b, 0.1f);
-		if (myGate != null) {
-			myGate.OnButtonPressed();
+//	public void SetMyGate(Gate gate) {
+//		this.myGate = gate;
+//		bodyColor = myGate.BodyColor;
+//		sr_body.color = bodyColor;
+//	}
+	private void SetIsPressed(bool _isPressed) {
+		isPressed = _isPressed;
+		if (isPressed) {
+			sr_body.color = new Color(bodyColor.r,bodyColor.g,bodyColor.b, 0.1f);
+		}
+		else {
+			sr_body.color = bodyColor;
 		}
 	}
 
@@ -62,6 +91,10 @@ public class GateButton : MonoBehaviour {
 	// ----------------------------------------------------------------
 	//  Events
 	// ----------------------------------------------------------------
+	private void GetPressed() {
+		SetIsPressed (true);
+		myChannel.OnButtonPressed();
+	}
 	private void OnTriggerEnter2D(Collider2D otherCol) {
 		// Ground??
 		if (LayerMask.LayerToName(otherCol.gameObject.layer) == LayerNames.Player) {

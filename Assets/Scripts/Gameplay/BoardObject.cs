@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardObject : MonoBehaviour {
+abstract public class BoardObject : MonoBehaviour {
+	// References
+	protected Level myLevel;
 
 	// Getters
 	protected float UnitSize { get { return GameProperties.UnitSize; } }
@@ -25,11 +27,15 @@ public class BoardObject : MonoBehaviour {
 		return new BoardPos(col,row, sideFacing);
 	}
 
+//	abstract public PropData SerializeAsData();
+
 
 	// ----------------------------------------------------------------
 	//  Initialize
 	// ----------------------------------------------------------------
 	protected void BaseInitialize(Level myLevel, PropData data) {
+		this.myLevel = myLevel;
+
 		// Parent jazz!
 		this.transform.SetParent(myLevel.transform);
 		this.transform.localPosition = Vector3.zero;
