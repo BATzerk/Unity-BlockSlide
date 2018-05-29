@@ -12,7 +12,6 @@ public class PlayerBody : MonoBehaviour {
 //	private readonly Color bodyColor_dashing2 = new ColorHSB(272/360f, 66/100f, 90/100f).ToColor();
 	private readonly Color bodyColor_neutral = new Color(25/255f, 175/255f, 181/255f);
 //	private readonly Color bodyColor_outOfDashes = new Color(128/255f, 128/255f, 128/255f);
-	private float aimDirRadius;
 	// References
 	[SerializeField] private Player myPlayer=null;
 
@@ -45,7 +44,6 @@ public class PlayerBody : MonoBehaviour {
 		sl_aimDir.SetColor(Color.white);
 		sl_aimDir.SetThickness(_size.magnitude*0.12f);
 		sl_aimDir.StartPos = Vector2.zero;
-		aimDirRadius = Mathf.Min(_size.x,_size.y) * 0.8f;
 	}
 
 

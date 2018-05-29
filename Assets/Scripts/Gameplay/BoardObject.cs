@@ -4,13 +4,50 @@ using UnityEngine;
 
 public class BoardObject : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
+	// Getters
+	protected float UnitSize { get { return GameProperties.UnitSize; } }
+	protected Vector3 pos {
+		get { return this.transform.localPosition; }
+		set { this.transform.localPosition = value; }
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+	protected float rotation {
+		get { return this.transform.localEulerAngles.z; }
+		set { this.transform.localEulerAngles = new Vector3(this.transform.localEulerAngles.x, this.transform.localEulerAngles.y, value); }
 	}
+
+
+	public Vector2 Pos { get { return pos; } }
+	public BoardPos GetBoardPos() {
+		float pu = GameProperties.UnitSize;
+		int col = Mathf.RoundToInt(pos.x/pu);
+		int row = Mathf.RoundToInt(pos.y/pu);
+		int sideFacing = Mathf.RoundToInt(rotation/90f);
+		return new BoardPos(col,row, sideFacing);
+	}
+
+
+	// ----------------------------------------------------------------
+	//  Initialize
+	// ----------------------------------------------------------------
+	protected void BaseInitialize(Level myLevel, PropData data) {
+		// Parent jazz!
+		this.transform.SetParent(myLevel.transform);
+		this.transform.localPosition = Vector3.zero;
+		this.transform.localScale = Vector3.one;
+		this.transform.localEulerAngles = Vector3.zero;
+
+		// Position!
+//		SetPosFromBoardPos(data.boardPos);
+		pos = data.pos;
+	}
+
+
+	// ----------------------------------------------------------------
+	//  Doers
+	// ----------------------------------------------------------------
+	protected void SetPosFromBoardPos(BoardPos boardPos) {
+		pos = new Vector3(boardPos.col*UnitSize, boardPos.row*UnitSize);
+	}
+
 }
+

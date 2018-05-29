@@ -20,10 +20,6 @@ public class Player : BoardObject {
 	[SerializeField] private PlayerBody body=null;
 
 	// Getters/Setters
-	private Vector3 pos {
-		get { return this.transform.localPosition; }
-		set { this.transform.localPosition = value; }
-	}
 	private Vector2 vel {
 		get { return myRigidbody.velocity; }
 		set { myRigidbody.velocity = value; }
@@ -36,32 +32,8 @@ public class Player : BoardObject {
 	}
 	private Vector2 inputAxis { get { return InputController.Instance==null ? Vector2.zero : InputController.Instance.PlayerInput; } }
 
-//	public bool IsDashing { get { return isMoving; } }
 	public int MoveSide { get { return moveSide; } }
-	public Vector2 Pos { get { return pos; } }
 	public Vector2 Size { get { return size; } }
-
-
-	// ----------------------------------------------------------------
-	//  Serialize
-	// ----------------------------------------------------------------
-	public PlayerData SerializeAsData() {
-		PlayerData data = new PlayerData (GetBoardPos());
-		return data;
-	}
-
-
-
-	// ----------------------------------------------------------------
-	//  Start
-	// ----------------------------------------------------------------
-	private void Start () {
-		// Size me, queen!
-		SetSize (new Vector2(3.9f,3.9f));//2.5f, 2.5f));
-
-		ResetVel();
-		SnapPosToGrid();
-	}
 	private void SetSize(Vector2 _size) {
 		this.size = _size;
 		body.SetSize(size);
@@ -72,15 +44,31 @@ public class Player : BoardObject {
 
 
 	// ----------------------------------------------------------------
-	//  Resetting
+	//  Serialize
 	// ----------------------------------------------------------------
-	public void ResetPos(Vector3 _pos) {
-		pos = _pos;
-		ResetVel();
+	public PlayerData SerializeAsData() {
+		PlayerData data = new PlayerData (pos);
+		return data;
 	}
-	private void ResetVel() {
+
+
+
+	// ----------------------------------------------------------------
+	//  Start
+	// ----------------------------------------------------------------
+	private void Start () {
+		SnapPosToGrid();
+	}
+	// ----------------------------------------------------------------
+	//  Initialize
+	// ----------------------------------------------------------------
+	public void Initialize(Level myLevel, PlayerData data) {
+		BaseInitialize(myLevel, data);
+
+		SetSize (new Vector2(UnitSize*0.98f, UnitSize*0.98f));
 		vel = Vector2.zero;
 	}
+
 
 
 
@@ -90,9 +78,9 @@ public class Player : BoardObject {
 	private void Update () {
 		if (Time.timeScale == 0) { return; } // No time? No dice.
 
-		AcceptDashInput();
+		AcceptMoveInput();
 	}
-	private void AcceptDashInput() {
+	private void AcceptMoveInput() {
 		// TEMP hardcoded
 		if (Input.GetKeyDown(KeyCode.LeftArrow))  { TryToMove(Sides.L); }
 		if (Input.GetKeyDown(KeyCode.RightArrow)) { TryToMove(Sides.R); }
@@ -110,8 +98,12 @@ public class Player : BoardObject {
 	// ----------------------------------------------------------------
 	//  Doers
 	// ----------------------------------------------------------------
+	protected void SnapPosToGrid() {
+		float pu = GameProperties.UnitSize;//*0.5f;
+		pos = new Vector3(Mathf.Round(pos.x/pu)*pu, Mathf.Round(pos.y/pu)*pu, pos.z);
+	}
+
 	private void TryToMove(int side) {
-		// We're on the ground and NOT timed out of dashing! Go!
 		if (CanMoveInDir(side)) {
 			StartMove(side);
 		}
@@ -122,21 +114,14 @@ public class Player : BoardObject {
 		moveDir = MathUtils.GetDir(side);
 		vel = moveDir.ToVector2() * MoveSpeed;
 		body.OnStartMove();
-		GameManagers.Instance.EventManager.OnPlayerDash(this);
+		GameManagers.Instance.EventManager.OnPlayerMoveStart(this);
 	}
 	private void EndMove() {
 		isMoving = false;
 		vel = Vector2.zero;
 		SnapPosToGrid();
-		GameManagers.Instance.EventManager.OnPlayerDashEnd(this);
-//		if (myWhiskers.IsTouchingGround()) { // If I'm touching the ground at all, recharge my dash!
-//			RechargeMoves();
-//		}
+		GameManagers.Instance.EventManager.OnPlayerMoveEnd(this);
 		body.OnEndMove();
-	}
-	private void SnapPosToGrid() {
-		float pu = GameProperties.UnitSize*0.5f;
-		pos = new Vector3(Mathf.Round(pos.x/pu)*pu, Mathf.Round(pos.y/pu)*pu, pos.z);
 	}
 
 	// ----------------------------------------------------------------

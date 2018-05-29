@@ -8,7 +8,7 @@ public class ScreenHandler : MonoBehaviour {
 	} }
 	// Statics!
 	static private float screenScale;
-	static private Vector2 relativeScreenSize; // to-do:? Set this based on the status of the Canvas
+	static private Vector2 relativeScreenSize=originalScreenSize; // default it to something for runtime compiling. // to-do:? Set this based on the status of the Canvas
 	// Components
 	[SerializeField] private Canvas scalingCanvas; // we have a dude on the canvas layer who can report to us the size in the screen we have available.
 	// Properties

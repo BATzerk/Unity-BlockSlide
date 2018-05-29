@@ -27,23 +27,18 @@ public class ToggleGround : MonoBehaviour {
 		SetIsOn(startsOn);
 
 		// Add event listeners!
-//		GameManagers.Instance.EventManager.PlayerDashEvent += OnPlayerDash;
-		GameManagers.Instance.EventManager.PlayerMoveEndEvent += OnPlayerDashEnd;
+		GameManagers.Instance.EventManager.PlayerMoveEndEvent += OnPlayerMoveEnd;
 	}
 	private void OnDestroy() {
 		// Remove event listeners!
-//		GameManagers.Instance.EventManager.PlayerDashEvent -= OnPlayerDash;
-		GameManagers.Instance.EventManager.PlayerMoveEndEvent -= OnPlayerDashEnd;
+		GameManagers.Instance.EventManager.PlayerMoveEndEvent -= OnPlayerMoveEnd;
 	}
 
 
 	// ----------------------------------------------------------------
 	//  Events
 	// ----------------------------------------------------------------
-//	private void OnPlayerDash(Player player) {
-//		ToggleIsOn();
-//	}
-	private void OnPlayerDashEnd(Player player) {
+	private void OnPlayerMoveEnd(Player player) {
 		ToggleIsOn();
 	}
 //	private void OnTriggerExit2D(Collider2D otherCol) {

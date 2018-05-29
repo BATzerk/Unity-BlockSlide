@@ -20,8 +20,8 @@ public class EventManager {
 	// Program Events
 	public void OnScreenSizeChanged () { if (ScreenSizeChangedEvent!=null) { ScreenSizeChangedEvent (); } }
 	// Game Events
-	public void OnPlayerDash(Player player) { if (PlayerMoveStartEvent!=null) { PlayerMoveStartEvent(player); } }
-	public void OnPlayerDashEnd(Player player) { if (PlayerMoveEndEvent!=null) { PlayerMoveEndEvent(player); } }
+	public void OnPlayerMoveStart(Player player) { if (PlayerMoveStartEvent!=null) { PlayerMoveStartEvent(player); } }
+	public void OnPlayerMoveEnd(Player player) { if (PlayerMoveEndEvent!=null) { PlayerMoveEndEvent(player); } }
 	public void OnPlayerJump(Player player) { if (PlayerJumpEvent!=null) { PlayerJumpEvent(player); } }
 
 }

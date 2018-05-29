@@ -22,7 +22,7 @@ public class GameBackground : MonoBehaviour {
 		tileSprites = new SpriteRenderer[numCols,numRows];
 		for (int col=0; col<numCols; col++) {
 			for (int row=0; row<numRows; row++) {
-				SpriteRenderer newSprite = Instantiate(ResourcesHandler.Instance.prefabGO_backgroundTileSprite).GetComponent<SpriteRenderer>();
+				SpriteRenderer newSprite = Instantiate(ResourcesHandler.Instance.backgroundTileSprite).GetComponent<SpriteRenderer>();
 				newSprite.transform.SetParent(this.transform);
 				newSprite.name = "BGTile_" + col + "," + row;
 				GameUtils.SizeSpriteRenderer (newSprite, unitSize,unitSize);
@@ -40,6 +40,7 @@ public class GameBackground : MonoBehaviour {
 	}
 
 	private void PositionTileSprites() {
+		if (tileSprites == null) { return; } // Safety check (for runtime compile).
 		// Snap MY position to the camera's grid pos!
 		Rect viewRect = cameraControllerRef.ViewRect;
 		Vector2 viewCenter = viewRect.center;

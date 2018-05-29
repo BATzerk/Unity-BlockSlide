@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class ResourcesHandler : MonoBehaviour {
 	// References!
-	[SerializeField] public GameObject prefabGO_imageLine;
+	[SerializeField] public GameObject imageLine;
 
-	[SerializeField] public GameObject prefabGO_backgroundTileSprite;
+	[SerializeField] public GameObject backgroundTileSprite;
+
+	[SerializeField] public GameObject gate;
+	[SerializeField] public GameObject gateButton;
+	[SerializeField] public GameObject gem;
+	[SerializeField] public GameObject ground;
+	[SerializeField] public GameObject player;
+	[SerializeField] public GameObject toggleGround;
 
 
 	// Instance

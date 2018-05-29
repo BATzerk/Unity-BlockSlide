@@ -9,9 +9,11 @@ public class GameController : MonoBehaviour {
 	// Components
 	[SerializeField] private GameObject go_structure; // the physical level layout
 	// References
+	[SerializeField] private GameCameraController cameraController;
 	[SerializeField] private Level level;
 
 	// Getters / Setters
+	public Level Level { get { return level; } }
 	private InputController inputController { get { return InputController.Instance; } }
 
 
@@ -20,12 +22,9 @@ public class GameController : MonoBehaviour {
 	//  Start / Destroy
 	// ----------------------------------------------------------------
 	private void Start () {
-//		ResetLevel ();
+		// Start us off in this version by telling the Level to look at itself, and set its references from what's in it.
+		level.FindAllMyPropReferences();
 	}
-
-//	private void ResetLevel() {
-//		level.Reset();
-//	}
 
 
 	// ----------------------------------------------------------------
@@ -43,6 +42,11 @@ public class GameController : MonoBehaviour {
 		yield return null;
 	}
 
+	private void Debug_SerializeAndReloadLevel() {
+		LevelData levelData = level.SerializeAsData();
+		level.InitializeFromData(levelData);
+		cameraController.Reset();
+	}
 
 
 	// ----------------------------------------------------------------
@@ -85,6 +89,10 @@ public class GameController : MonoBehaviour {
 		// ~~~~ DEBUG ~~~~
 		if (Input.GetKeyDown(KeyCode.Return)) {
 			ReloadScene();
+			return;
+		}
+		if (Input.GetKeyDown(KeyCode.S)) {
+			Debug_SerializeAndReloadLevel();
 			return;
 		}
 		else if (Input.GetKeyDown(KeyCode.T)) {

@@ -8,7 +8,7 @@ public class GameProperties : MonoBehaviour {
 
 
 	// Constants
-	public const float UnitSize = 4f; // in Unity units
+	public const float UnitSize = 4f; // in Unity units TODO: Move this out of this class.
 
 
 

@@ -9,13 +9,14 @@ public class GameCameraController : MonoBehaviour {
 	private const float ConstOrthoScale = 0.1f;//HACKy non-pixel-perfect estimation.
 	private const float ZPos = -10; // lock z pos.
 	// Properties
-	private float orthoSizeNeutral;
+	private float orthoSizeNeutral=10; // default this to something.
 	private float zoomAmount = 1; // UNUSED currently. Stays at 1. It's here for if/when we need it.
 	private float screenShakeVolume;
 	private float screenShakeVolumeVel;
 	private Vector2 vel;
-	private Rect viewRect;
+	private Rect viewRect=new Rect(0,0, 800,600); // default this to something.
 	// References
+	[SerializeField] private GameController gameControllerRef;
 	[SerializeField] private FullScrim fullScrim=null;
 	private Transform tf_player;
 
@@ -63,12 +64,8 @@ public class GameCameraController : MonoBehaviour {
 		// Remove event listeners!
 		GameManagers.Instance.EventManager.ScreenSizeChangedEvent -= OnScreenSizeChanged;
 	}
-	private void Start () {
-		Reset ();
-	}
 	public void Reset () {
-		// TEMP!
-		tf_player = GameObject.FindObjectOfType<Player>().transform;
+		tf_player = gameControllerRef.Level.player.transform;
 
 		UpdateOrthoSizeNeutral ();
 
@@ -79,7 +76,7 @@ public class GameCameraController : MonoBehaviour {
 
 		viewRect = new Rect ();
 		viewRect.size = GetViewRectSizeFromZoomAmount (1);
-		pos = new Vector2(tf_player.localPosition.x, this.transform.localPosition.y); // Start us with the Player in view.
+		pos = new Vector2(tf_player.localPosition.x, 0); // Start us with the Player in view.
 
 		ApplyViewRect ();
 	}
@@ -106,6 +103,7 @@ public class GameCameraController : MonoBehaviour {
 	}
 
 	private void UpdateApplyVel() {
+		if (tf_player == null) { return; } // Safety check.
 		float velX = (tf_player.localPosition.x - pos.x) * 0.1f;
 		vel = new Vector2(velX, 0);
 		pos += vel;
